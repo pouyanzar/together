@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
       uuid: 'myUniqueUUID'
     });
 
-    function App() {
+    function Messages() {
       return (
         <PubNubProvider client={pubnub}>
           <Chat />
@@ -49,9 +49,9 @@ import React, { useState, useEffect } from 'react';
       }, [pubnub, channels]);
 
       return (
-        <div style={pageStyles}>
+        <div style={pageStyles} className='flex justify-end'>
           <div style={chatStyles}>
-            <div style={headerStyles}>React Chat Example</div>
+            <div style={headerStyles}>Chat</div>
             <div style={listStyles}>
               {messages.map((message, index) => {
                 return (
@@ -89,17 +89,13 @@ import React, { useState, useEffect } from 'react';
     }
 
     const pageStyles = {
-      alignItems: 'center',
-      background: '#282c34',
-      display: 'flex',
-      justifyContent: 'center',
-      minHeight: '100vh',
+      minHeight: '0vh',
     };
 
     const chatStyles = {
       display: 'flex',
       flexDirection: 'column',
-      height: '50vh',
+      height: '100vh',
       width: '50%',
     };
 
@@ -123,7 +119,7 @@ import React, { useState, useEffect } from 'react';
     const messageStyles = {
       backgroundColor: '#eee',
       borderRadius: '5px',
-      color: '#333',
+      color: 'black',
       fontSize: '1.1rem',
       margin: '5px',
       padding: '8px 15px',
@@ -135,6 +131,7 @@ import React, { useState, useEffect } from 'react';
 
     const inputStyles = {
       flexGrow: 1,
+      color: 'black',
       fontSize: '1.1rem',
       padding: '10px 15px',
     };
@@ -144,4 +141,4 @@ import React, { useState, useEffect } from 'react';
       padding: '10px 15px',
     };
 
-    export default App;
+    export default Messages;

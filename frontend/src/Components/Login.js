@@ -67,7 +67,7 @@ const Login = () => {
       {/* {success ? (
         <ProtectedRoute isAuthenticated={isAuthenticated} />
       ) : ( */}
-      <section>
+      <section className="">
         <p
           ref={errRef}
           className={errMsg ? "errmsg" : "offscreen"}
@@ -75,7 +75,7 @@ const Login = () => {
         >
           {errMsg}
         </p>
-        <h1>Sign In</h1>
+        <h1>TOGETHER</h1>
         <form onSubmit={handleSubmit}>
           <label htmlFor="email">Email:</label>
           <input
