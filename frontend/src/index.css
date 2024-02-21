@@ -43,10 +43,12 @@ form {
     justify-content: space-evenly;
     flex-grow: 1;
     padding-bottom: 1rem;
+
 }
 
 form input{
   color: black;
+  min-width: 150px;
 }
 
 a, a:visited {
@@ -133,8 +135,15 @@ button {
     width: 300px;
     height: 300px;
     object-fit: cover;
+    /* margin: 1rem; */
+    padding: 1rem;
+
   }
   
+  .video-container{
+    display: flex;
+    justify-content: space-between;
+  }
   .myId {
     display: flex;
     flex-direction: column;

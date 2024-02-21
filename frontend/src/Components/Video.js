@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import Button from "react-bootstrap/Button";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+// import { CopyToClipboard } from "react-copy-to-clipboard";
 // import Peer from "peerjs";
 import AuthContext from "../context/AuthProvider";
 
 import io from "socket.io-client";
-const socket = io("http://localhost:8000");
 
 const Video = () => {
   const { auth } = useContext(AuthContext);
@@ -17,11 +16,13 @@ const Video = () => {
   const [callAccepted, setCallAccepted] = useState(false);
   const [idToCall, setIdToCall] = useState("");
   const [callEnded, setCallEnded] = useState(false);
+  const [emailToCall, setEmailToCall] = useState("");
   const [name, setName] = useState("");
   const myVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
   const { email } = auth;
+  const socket = io("http://localhost:8000");
 
   useEffect(() => {
     navigator.mediaDevices
@@ -34,12 +35,17 @@ const Video = () => {
       });
     socket.on("me", (id) => {
       console.log("adding IDDDD......");
-      socket.emit("me", { [email]: id });
+      fetch("http://localhost:8000/api/v1/add-socket-id", {
+        method: "PATCH",
+        body: JSON.stringify({ socketId: id, email }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       setMe(id);
     });
 
     socket.on("callUser", (data) => {
-      console.log("data.from:" + data.from);
       setReceivingCall(true);
       setCaller(data.from);
       setName(data.name);
@@ -53,14 +59,31 @@ const Video = () => {
       trickle: false,
       stream: stream,
     });
+
     peer.on("signal", (data) => {
+      fetch("http://localhost:8000/api/v1/find-user-by-email", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) =>
+        res.json().then((user) => {
+          if (user) {
+            setIdToCall(user.socket_id);
+          }
+          console.log(idToCall);
+        })
+      );
+      console.log("id to call: ", idToCall);
       socket.emit("callUser", {
-        userToCall: email,
+        userToCall: idToCall,
         signalData: data,
         from: me,
         name: name,
       });
     });
+
     peer.on("stream", (stream) => {
       console.log("connected!!!!");
       // if (userVideo.current) {
@@ -72,12 +95,15 @@ const Video = () => {
       setCallAccepted(true);
       peer.signal(signal);
     });
+    peer.on("error", (error) => {
+      console.error("An error occurred:", error);
+    });
 
     connectionRef.current = peer;
-    console.log(connectionRef.current);
   };
 
   const answerCall = () => {
+    console.log("answering the call....");
     setCallAccepted(true);
     const peer = new window.SimplePeer({
       initiator: false,
@@ -89,9 +115,9 @@ const Video = () => {
       socket.emit("answerCall", { signal: data, to: caller });
     });
     peer.on("stream", (stream) => {
-      // if (userVideo.current) {
+      if (userVideo.current) {
         userVideo.current.srcObject = stream;
-      // }
+      }
     });
 
     peer.signal(callerSignal);
@@ -158,8 +184,8 @@ const Video = () => {
             placeholder="Enter the ID to call"
             label="ID to call"
             variant="filled"
-            value={idToCall}
-            onChange={(e) => setIdToCall(e.target.value)}
+            value={emailToCall}
+            onChange={(e) => setEmailToCall(e.target.value)}
           />
           <div className="call-button">
             {callAccepted && !callEnded ? (
@@ -170,12 +196,12 @@ const Video = () => {
               <Button
                 // color="primary"
                 aria-label="call"
-                onClick={() => callUser(idToCall)}
+                onClick={() => callUser(emailToCall)}
               >
                 📞
               </Button>
             )}
-            <p>ID TO CALL: {idToCall}</p>
+            <p>USER TO CALL: {emailToCall}</p>
           </div>
         </div>
         <div>
