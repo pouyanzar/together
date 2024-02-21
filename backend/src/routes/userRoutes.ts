@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from "express";
-import { getAllUsers } from "../controllers/userController";
+import {
+  addSocketId,
+  findUserByEmail,
+} from "../controllers/addSocketController";
 import {
   signup,
   login,
@@ -13,8 +16,10 @@ const router = express.Router();
 
 router.post("/signup", signup);
 router.post("/login", login);
+router.patch("/add-socket-id", addSocketId);
+router.post("/find-user-by-email", findUserByEmail);
 // router.post("/newUser", newUser);
-router.route("/").get(protect, restrictTo("admin"), getAllUsers);
+// router.route("/").get(protect, restrictTo("admin"), getAllUsers);
 router.route("/:id");
 
 export default router;

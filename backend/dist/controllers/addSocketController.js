@@ -12,25 +12,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addSocketId = void 0;
+exports.addSocketId = exports.findUserByEmail = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
-const updateSocketId = (email, socketId) => __awaiter(void 0, void 0, void 0, function* () {
+// const updateSocketId = async (email: string, socketId: string) => {
+//   try {
+//     // console.log("updated user:", user);
+//   } catch (err) {
+//     console.log("there is an error!");
+//   }
+// };
+// export const findUserByEmail = async (email: string) => {
+//   const user = await User.findOne({ email: email });
+//   return user;
+// };
+const findUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.body;
+    console.log(req.body);
     try {
-        const user = yield userModel_1.default.findOneAndUpdate({ email }, { $set: { socket_id: socketId } });
-        console.log("updated user:", user);
+        // updateSocketId(socketId,email)
+        const user = yield userModel_1.default.findOne({ "email": email });
+        res.json(user);
     }
     catch (err) {
-        console.log("there is an error!");
+        res.status(400).json({
+            status: "fail",
+            message: err,
+        });
     }
 });
-const findUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield userModel_1.default.findOne({ email: email });
-    return user;
-});
+exports.findUserByEmail = findUserByEmail;
 const addSocketId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { socketId, email } = req.body;
+    console.log(req.body);
     try {
-        updateSocketId(socketId, email);
+        // updateSocketId(socketId,email)
+        const user = yield userModel_1.default.findOneAndUpdate({ email }, { $set: { socket_id: socketId } });
+        res.json(user);
     }
     catch (err) {
         res.status(400).json({

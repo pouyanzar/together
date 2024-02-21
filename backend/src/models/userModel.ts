@@ -43,6 +43,10 @@ const userSchema = new Schema({
       message: "Passwords are not the same!",
     },
   },
+  socket_id: {
+    type: String,
+    required: false
+  },
 });
 userSchema.methods.correctPassword = async function (
   candidatePassword: string,

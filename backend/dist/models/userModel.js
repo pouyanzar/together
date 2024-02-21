@@ -55,6 +55,10 @@ const userSchema = new mongoose_1.Schema({
             message: "Passwords are not the same!",
         },
     },
+    socket_id: {
+        type: String,
+        required: false
+    },
 });
 userSchema.methods.correctPassword = function (candidatePassword, userPassword) {
     return __awaiter(this, void 0, void 0, function* () {

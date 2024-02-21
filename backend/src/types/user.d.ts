@@ -7,4 +7,5 @@ export interface IUser {
   role: 'user' | 'admin'
   password: string
   passwordConfirm?: string
+  socket_id: string
 }
