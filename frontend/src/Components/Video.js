@@ -1,11 +1,8 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import Button from "react-bootstrap/Button";
-// import { CopyToClipboard } from "react-copy-to-clipboard";
-// import Peer from "peerjs";
-import Peer from "simple-peer";
 import AuthContext from "../context/AuthProvider";
-
 import io from "socket.io-client";
+import Chat from "./Chat";
 
 const Video = () => {
   const { auth } = useContext(AuthContext);
@@ -15,7 +12,6 @@ const Video = () => {
   const [caller, setCaller] = useState("");
   const [callerSignal, setCallerSignal] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
-  const [idToCall, setIdToCall] = useState("");
   const [callEnded, setCallEnded] = useState(false);
   const [emailToCall, setEmailToCall] = useState("");
   const [name, setName] = useState("");
@@ -24,9 +20,10 @@ const Video = () => {
   const socket = useRef();
   const connectionRef = useRef();
   const { email } = auth;
+  const baseUrl = "http://localhost:8000";
 
   useEffect(() => {
-    socket.current = io("http://localhost:8000");
+    socket.current = io(baseUrl);
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
@@ -36,8 +33,7 @@ const Video = () => {
         }
       });
     socket.current.on("me", (id) => {
-      console.log("adding IDDDD......");
-      fetch("http://localhost:8000/api/v1/add-socket-id", {
+      fetch(`${baseUrl}/api/v1/add-socket-id`, {
         method: "PATCH",
         body: JSON.stringify({ socketId: id, email }),
         headers: {
@@ -63,7 +59,7 @@ const Video = () => {
     });
 
     peer.on("signal", async (data) => {
-      await fetch("http://localhost:8000/api/v1/find-user-by-email", {
+      await fetch(`${baseUrl}/api/v1/find-user-by-email`, {
         method: "POST",
         body: JSON.stringify({ email }),
         headers: {
@@ -71,7 +67,6 @@ const Video = () => {
         },
       }).then((res) =>
         res.json().then((user) => {
-          console.log(user);
           if (user) {
             socket.current.emit("callUser", {
               userToCall: user.socket_id,
@@ -82,15 +77,10 @@ const Video = () => {
           }
         })
       );
-      // console.log("id to call: ", idToCall);
     });
 
     peer.on("stream", (stream) => {
-      console.log("connected!!!!");
-      // if (userVideo.current) {
-      //   console.log('user')
       userVideo.current.srcObject = stream;
-      // }
     });
     socket.current.on("callAccepted", (signal) => {
       setCallAccepted(true);
@@ -104,7 +94,6 @@ const Video = () => {
   };
 
   const answerCall = () => {
-    console.log("answering the call....");
     setCallAccepted(true);
     const peer = new window.SimplePeer({
       initiator: false,
@@ -169,16 +158,6 @@ const Video = () => {
             style={{ marginBottom: "20px" }}
           />
           <p>{email}</p>
-
-          {/* <CopyToClipboard text={me} style={{ marginBottom: "2rem" }}>
-            <Button
-              variant="sucess"
-              // startIcon={<AssignmentIcon fontSize="large" />}
-            >
-              Copy ID
-            </Button>
-          </CopyToClipboard> */}
-
           <input
             type="text"
             id="filled-basic"
@@ -190,12 +169,20 @@ const Video = () => {
           />
           <div className="call-button">
             {callAccepted && !callEnded ? (
-              <Button variant="contained" color="secondary" onClick={leaveCall}>
-                End Call
-              </Button>
+              <>
+                <Chat />
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={leaveCall}
+                >
+                  End Call
+                </Button>
+              </>
             ) : (
               <Button
-                // color="primary"
+                ariant="contained"
+                color="secondary"
                 aria-label="call"
                 onClick={() => callUser(emailToCall)}
               >

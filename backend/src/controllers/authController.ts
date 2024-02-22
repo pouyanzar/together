@@ -106,11 +106,6 @@ export const login: ExpressFunction = async (req, res) => {
     // 3) If everything ok, send token to client
     // @ts-expect-error
     createSendToken(user, 200, isAuthenticated, res);
-    // user.isAuthenticated = isAuthenticated;
-    // res.status(201).json({
-    //   data: user,
-    //   isAuthenticated,
-    // });
   } catch (err) {
     return res.status(400).json({
       status: "fail",

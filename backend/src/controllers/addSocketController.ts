@@ -1,12 +1,10 @@
 import { type ExpressFunction } from "../types/expressFunction";
 import User from "../models/userModel";
 
-
 export const findUserByEmail: ExpressFunction = async (req, res) => {
   const { email } = req.body;
   console.log(req.body);
   try {
-    // updateSocketId(socketId,email)
     const user = await User.findOne({ email: email });
     res.json(user);
   } catch (err) {
@@ -21,7 +19,6 @@ export const addSocketId: ExpressFunction = async (req, res) => {
   const { socketId, email } = req.body;
   console.log(req.body);
   try {
-    // updateSocketId(socketId,email)
     const user = await User.findOneAndUpdate(
       { email },
       { $set: { socket_id: socketId } }

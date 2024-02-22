@@ -13,7 +13,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     userRef.current?.focus();
@@ -34,19 +33,13 @@ const Login = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-      // console.log(JSON.stringify(response?.data));
-      //console.log(JSON.stringify(response));
+
       const accessToken = response?.data?.token;
-      // console.log(JSON.stringify(response?.data?.token));
-
       const isAuthenticated = response?.data?.data?.isAuthenticated;
-      // console.log(JSON.stringify(response?.data?.data?.isAuthenticated));
 
-      // const roles = response?.data?.roles;
       setAuth({ email, password, accessToken, isAuthenticated });
       setEmail("");
       setPassword("");
-      setSuccess(true);
       navigate("/");
     } catch (err) {
       if (!err?.response) {
@@ -64,9 +57,6 @@ const Login = () => {
 
   return (
     <>
-      {/* {success ? (
-        <ProtectedRoute isAuthenticated={isAuthenticated} />
-      ) : ( */}
       <section className="">
         <p
           ref={errRef}
@@ -92,6 +82,7 @@ const Login = () => {
           <input
             type="password"
             id="password"
+            autoComplete="on"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             required
@@ -107,7 +98,6 @@ const Login = () => {
           </span>
         </p>
       </section>
-      {/* )} */}
     </>
   );
 };

@@ -12,35 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addSocketId = exports.findUserByEmail = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
-const findUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email } = req.body;
-    console.log(req.body);
-    try {
-        const user = yield userModel_1.default.findOne({ email: email });
-        res.json(user);
-    }
-    catch (err) {
-        res.status(400).json({
-            status: "fail",
-            message: err,
-        });
-    }
-});
-exports.findUserByEmail = findUserByEmail;
-const addSocketId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { socketId, email } = req.body;
-    console.log(req.body);
-    try {
-        const user = yield userModel_1.default.findOneAndUpdate({ email }, { $set: { socket_id: socketId } });
-        res.json(user);
-    }
-    catch (err) {
-        res.status(400).json({
-            status: "fail",
-            message: err,
-        });
-    }
-});
-exports.addSocketId = addSocketId;
+const disconnector = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield userModel_1.default.findOneAndUpdate({ socket_id: id }, { $set: { socket_id: "" } }); });
+exports.default = disconnector;

@@ -18,17 +18,12 @@ if (process.env.NODE_ENV === "development") {
 }
 app.use((0, cookie_session_1.default)({
     name: "session",
-    keys: ['email', 'passowrd']
+    keys: ["email", "passowrd"],
 }));
 app.use((req, res, next) => {
     console.log("Hello from the middleware 👋");
     next();
 });
 // ROUTES
-// app.use('/api/v1/books', bookRouter)
 app.use("/api/v1/", userRoutes_1.default);
-//
-// app.get("/", (req, res) => {
-//   res.status(200).send("Welcome to Our Express Server!!!!");
-// });
 exports.default = app;

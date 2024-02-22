@@ -13,7 +13,5 @@ router.post("/signup", authController_1.signup);
 router.post("/login", authController_1.login);
 router.patch("/add-socket-id", addSocketController_1.addSocketId);
 router.post("/find-user-by-email", addSocketController_1.findUserByEmail);
-// router.post("/newUser", newUser);
-// router.route("/").get(protect, restrictTo("admin"), getAllUsers);
 router.route("/:id");
 exports.default = router;

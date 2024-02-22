@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Video from "./Components/Video";
@@ -9,7 +9,7 @@ import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./context/AuthProvider";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./Components/ProtectedRoute";
-import Chat from "./Components/Chat"
+// import Chat from "./Components/Chat"
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
   {
@@ -27,7 +27,6 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Video />
-        <Chat />
       </ProtectedRoute>
     ),
     errorElement: <NotFound />,
