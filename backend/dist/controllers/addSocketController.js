@@ -14,23 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addSocketId = exports.findUserByEmail = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
-// const updateSocketId = async (email: string, socketId: string) => {
-//   try {
-//     // console.log("updated user:", user);
-//   } catch (err) {
-//     console.log("there is an error!");
-//   }
-// };
-// export const findUserByEmail = async (email: string) => {
-//   const user = await User.findOne({ email: email });
-//   return user;
-// };
 const findUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email } = req.body;
     console.log(req.body);
     try {
         // updateSocketId(socketId,email)
-        const user = yield userModel_1.default.findOne({ "email": email });
+        const user = yield userModel_1.default.findOne({ email: email });
         res.json(user);
     }
     catch (err) {

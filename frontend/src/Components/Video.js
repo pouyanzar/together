@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useContext } from "react";
 import Button from "react-bootstrap/Button";
 // import { CopyToClipboard } from "react-copy-to-clipboard";
 // import Peer from "peerjs";
+import Peer from "simple-peer";
 import AuthContext from "../context/AuthProvider";
 
 import io from "socket.io-client";
@@ -20,11 +21,12 @@ const Video = () => {
   const [name, setName] = useState("");
   const myVideo = useRef();
   const userVideo = useRef();
+  const socket = useRef();
   const connectionRef = useRef();
   const { email } = auth;
-  const socket = io("http://localhost:8000");
 
   useEffect(() => {
+    socket.current = io("http://localhost:8000");
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
@@ -33,7 +35,7 @@ const Video = () => {
           myVideo.current.srcObject = stream;
         }
       });
-    socket.on("me", (id) => {
+    socket.current.on("me", (id) => {
       console.log("adding IDDDD......");
       fetch("http://localhost:8000/api/v1/add-socket-id", {
         method: "PATCH",
@@ -45,7 +47,7 @@ const Video = () => {
       setMe(id);
     });
 
-    socket.on("callUser", (data) => {
+    socket.current.on("callUser", (data) => {
       setReceivingCall(true);
       setCaller(data.from);
       setName(data.name);
@@ -60,8 +62,8 @@ const Video = () => {
       stream: stream,
     });
 
-    peer.on("signal", (data) => {
-      fetch("http://localhost:8000/api/v1/find-user-by-email", {
+    peer.on("signal", async (data) => {
+      await fetch("http://localhost:8000/api/v1/find-user-by-email", {
         method: "POST",
         body: JSON.stringify({ email }),
         headers: {
@@ -69,19 +71,18 @@ const Video = () => {
         },
       }).then((res) =>
         res.json().then((user) => {
+          console.log(user);
           if (user) {
-            setIdToCall(user.socket_id);
+            socket.current.emit("callUser", {
+              userToCall: user.socket_id,
+              signalData: data,
+              from: me,
+              name: name,
+            });
           }
-          console.log(idToCall);
         })
       );
-      console.log("id to call: ", idToCall);
-      socket.emit("callUser", {
-        userToCall: idToCall,
-        signalData: data,
-        from: me,
-        name: name,
-      });
+      // console.log("id to call: ", idToCall);
     });
 
     peer.on("stream", (stream) => {
@@ -91,7 +92,7 @@ const Video = () => {
       userVideo.current.srcObject = stream;
       // }
     });
-    socket.on("callAccepted", (signal) => {
+    socket.current.on("callAccepted", (signal) => {
       setCallAccepted(true);
       peer.signal(signal);
     });
@@ -112,7 +113,7 @@ const Video = () => {
     });
     peer.on("signal", (data) => {
       console.log(caller);
-      socket.emit("answerCall", { signal: data, to: caller });
+      socket.current.emit("answerCall", { signal: data, to: caller });
     });
     peer.on("stream", (stream) => {
       if (userVideo.current) {

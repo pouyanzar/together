@@ -2,6 +2,7 @@ import http from "http";
 import cors from "cors";
 import { Server } from "socket.io";
 import app from "./app";
+import User from "./models/userModel";
 import { DBconnect } from "./config/mongo";
 import dotenv from "dotenv";
 
@@ -11,34 +12,29 @@ DBconnect();
 app.use(cors());
 const PORT: string | number = process.env.PORT ?? 8000;
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
-// let users: { [key: string]: string }[] = [];
+export const io = new Server(server, { cors: { origin: "*" } });
 console.log("starting....");
 io.on("connection", (socket) => {
-  console.log("connected!");
-  socket.emit("me", socket.id);
-  // socket.on("me", (user) => {
-  // });
+  if (socket) {
+    console.log("connected!");
+    console.log("me!", socket.id);
+    socket.emit("me", socket.id);
+  }
+
   socket.on("disconnect", () => {
     socket.broadcast.emit("callEnded");
-    // for (const user of users) {
-    //   if (Object.values(user)[0] == socket.id) {
-    //     users.splice(users.indexOf(user, 1));
-    //   }
-    // }
-    console.log("disconnected!!!", socket.id);
-    // console.log(users);
+    const user = async () =>
+      await User.findOneAndUpdate(
+        { socket_id: socket.id },
+        { $set: { socket_id: "" } }
+      );
+    console.log("disconnected!!!");
+    console.log(user);
   });
 
   socket.on("callUser", (data) => {
     console.log("calling......");
-    // console.log(users);
-    // findUserByEmail(data.userToCall).then((user) => {
     console.log("user to call: ", data.userToCall);
-    //   if (user) {
-    //     const userSocketId = user.socket_id;
-    //     if (userSocketId) {
-
     io.to(data.userToCall).emit("callUser", {
       signal: data.signalData,
       from: data.from,
