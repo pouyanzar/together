@@ -50,7 +50,7 @@ const Video = () => {
       setCallerName(data.name);
       setCallerSignal(data.signal);
     });
-  }, []);
+  }, [email]);
 
   const callUser = (email) => {
     const peer = new window.SimplePeer({
