@@ -22,7 +22,7 @@ const Video = () => {
   const socket = useRef();
   const connectionRef = useRef();
   const { email } = auth;
-  const baseUrl = "http://localhost:8000";
+  const baseUrl = "https://together-server-8glm.onrender.com";
 
   useEffect(() => {
     socket.current = io(baseUrl);
