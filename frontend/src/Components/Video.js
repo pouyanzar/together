@@ -16,7 +16,6 @@ const Video = () => {
   const [emailToCall, setEmailToCall] = useState("");
   const [callerName, setCallerName] = useState("");
   const [name, setName] = useState("");
-  const [view, setView] = useState(true);
   const myVideo = useRef();
   const userVideo = useRef();
   const socket = useRef();
@@ -162,7 +161,6 @@ const Video = () => {
                     onChange={(e) => setName(e.target.value)}
                     style={{
                       marginBottom: "20px",
-                      display: view ? "block" : "hidden",
                     }}
                   />
                   <input
