@@ -9,7 +9,7 @@ import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./context/AuthProvider";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./Components/ProtectedRoute";
-// import Chat from "./Components/Chat"
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
   {

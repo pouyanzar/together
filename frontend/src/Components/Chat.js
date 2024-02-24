@@ -96,14 +96,14 @@ const pageStyles = {
 const chatStyles = {
   display: "flex",
   flexDirection: "column",
-  height: "100vh",
-  width: "50vw",
+  height: "50vh",
+  width: "30vw",
 };
 
 const headerStyles = {
   background: "#323742",
   color: "white",
-  fontSize: "1.4rem",
+  fontSize: "1rem",
   padding: "10px 15px",
   borderRadius: "10px 10px 0 0",
 };
@@ -123,7 +123,7 @@ const messageStyles = {
   backgroundColor: "#eee",
   borderRadius: "5px",
   color: "black",
-  fontSize: "1.1rem",
+  fontSize: "1rem",
   margin: "5px",
   padding: "8px 15px",
 };
@@ -135,17 +135,17 @@ const footerStyles = {
 const inputStyles = {
   flexGrow: 1,
   color: "black",
-  fontSize: "1.1rem",
+  fontSize: "1rem",
   padding: "10px 15px",
   marginTop: ".5rem",
   marginRight: ".2rem",
 };
 
 const buttonStyles = {
-  fontSize: "1rem",
+  fontSize: ".75rem",
   padding: "10px 15px",
   border: "1px solid",
-  width: "20vw",
+  width: "15vw",
   marginTop: ".5rem",
 };
 

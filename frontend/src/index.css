@@ -15,8 +15,14 @@ html {
 body {
   min-height: 100vh;
   background-color: rgb(118, 121, 124);
+  text-align: center;
 }
 
+.title {
+  font-weight: bold;
+  font-size: 3em;
+  color: "#fff";
+}
 .App {
   display: flex;
   flex-direction: column;
@@ -137,6 +143,8 @@ button {
 
 .container {
   margin: 2rem;
+  display: flex;
+  justify-content: center;
 }
 video {
   width: 300px;
@@ -144,20 +152,63 @@ video {
   object-fit: cover;
   /* margin: 1rem; */
   padding: 1rem;
+  border-radius: 100%;
 }
 
 .video-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 .myId {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 50vw;
   margin: 1rem;
 }
 
 .call-button {
-  width: 100vw;
+  width: 50vw;
+  /* margin-top: 1rem; */
+  /* margin-left: 3rem; */
+  text-align: center;
+  font-size: 3em;
+  color: #fff;
+}
+
+.endCall {
+  background-color: crimson;
+  border: 1px solid #fff;
   margin-top: 1rem;
+  font-size: 2vw;
+  padding: 0.5rem;
+}
+
+.chatEndCall {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.caller {
+}
+
+.caller button {
+  background-color: cornflowerblue;
+  padding: 0.5rem;
+  border: 1px solid #fff;
+  margin-top: 0.5rem;
+}
+
+.subContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.chatVideoContainer {
+  display: flex;
+  /* flex-direction: column; */
+  align-items: flex-start;
+  /* justify-content: center; */
 }

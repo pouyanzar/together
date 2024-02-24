@@ -14,7 +14,9 @@ const Video = () => {
   const [callAccepted, setCallAccepted] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
   const [emailToCall, setEmailToCall] = useState("");
+  const [callerName, setCallerName] = useState("");
   const [name, setName] = useState("");
+  const [view, setView] = useState(true);
   const myVideo = useRef();
   const userVideo = useRef();
   const socket = useRef();
@@ -46,7 +48,7 @@ const Video = () => {
     socket.current.on("callUser", (data) => {
       setReceivingCall(true);
       setCaller(data.from);
-      setName(data.name);
+      setCallerName(data.name);
       setCallerSignal(data.signal);
     });
   }, []);
@@ -101,7 +103,6 @@ const Video = () => {
       stream: stream,
     });
     peer.on("signal", (data) => {
-      console.log(caller);
       socket.current.emit("answerCall", { signal: data, to: caller });
     });
     peer.on("stream", (stream) => {
@@ -121,86 +122,101 @@ const Video = () => {
 
   return (
     <>
-      <h1 style={{ textAlign: "center", color: "#fff" }}>TOGETHER</h1>
+      <h1 className="title">TOGETHER</h1>
       <div className="container">
-        <div className="video-container">
-          <div className="video">
-            {stream && (
-              <video
-                playsInline
-                muted
-                ref={myVideo}
-                autoPlay
-                style={{ width: "300px", height: "300px" }}
-              />
-            )}
-          </div>
-          <div className="video">
-            {callAccepted && !callEnded ? (
-              <video
-                playsInline
-                ref={userVideo}
-                autoPlay
-                style={{ width: "300px", height: "300px" }}
-              />
-            ) : null}
-          </div>
-        </div>
-        <div className="myId">
-          <input
-            type="text"
-            id="filled-basic"
-            label="Name"
-            placeholder="Name"
-            variant="filled"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ marginBottom: "20px" }}
-          />
-          <p>{email}</p>
-          <input
-            type="text"
-            id="filled-basic"
-            placeholder="Enter the ID to call"
-            label="ID to call"
-            variant="filled"
-            value={emailToCall}
-            onChange={(e) => setEmailToCall(e.target.value)}
-          />
-          <div className="call-button">
-            {callAccepted && !callEnded ? (
-              <>
-                <Chat />
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={leaveCall}
-                >
-                  End Call
-                </Button>
-              </>
-            ) : (
-              <Button
-                ariant="contained"
-                color="secondary"
-                aria-label="call"
-                onClick={() => callUser(emailToCall)}
-              >
-                📞
-              </Button>
-            )}
-            <p>USER TO CALL: {emailToCall}</p>
-          </div>
-        </div>
-        <div>
-          {receivingCall && !callAccepted ? (
-            <div className="caller">
-              <h1>{name} is calling...</h1>
-              <Button variant="contained" color="primary" onClick={answerCall}>
-                Answer
-              </Button>
+        <div className="chatVideoContainer">
+          <div className="video-container">
+            <div className="video">
+              {stream && (
+                <video
+                  playsInline
+                  muted
+                  ref={myVideo}
+                  autoPlay
+                  style={{ width: "300px", height: "300px" }}
+                />
+              )}
             </div>
-          ) : null}
+            <div className="video">
+              {callAccepted && !callEnded ? (
+                <video
+                  playsInline
+                  ref={userVideo}
+                  autoPlay
+                  style={{ width: "300px", height: "300px" }}
+                />
+              ) : null}
+            </div>
+          </div>
+          <div className="subContainer">
+            <div className="myId">
+              {!callAccepted || callEnded ? (
+                <>
+                  <input
+                    type="text"
+                    id="filled-basic"
+                    label="Name"
+                    placeholder="Name"
+                    variant="filled"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    style={{
+                      marginBottom: "20px",
+                      display: view ? "block" : "hidden",
+                    }}
+                  />
+                  <input
+                    type="text"
+                    id="filled-basic"
+                    placeholder="Enter the email to call"
+                    label="Email to call"
+                    variant="filled"
+                    value={emailToCall}
+                    onChange={(e) => setEmailToCall(e.target.value)}
+                  />
+                </>
+              ) : null}
+              <div className="call-button">
+                {callAccepted && !callEnded ? (
+                  <>
+                    <Chat />
+                    <Button
+                      className="endCall"
+                      variant="contained"
+                      color="secondary"
+                      onClick={leaveCall}
+                    >
+                      End Call
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    ariant="contained"
+                    color="secondary"
+                    aria-label="call"
+                    onClick={() => callUser(emailToCall)}
+                  >
+                    📞
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <div>
+              {receivingCall && !callAccepted ? (
+                <div className="caller">
+                  <h1>{callerName} is calling...</h1>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={answerCall}
+                  >
+                    Answer
+                  </Button>
+                </div>
+              ) : null}
+            </div>
+          </div>
         </div>
       </div>
     </>
