@@ -25,6 +25,7 @@ const Video = () => {
 
   useEffect(() => {
     socket.current = io(baseUrl);
+
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
@@ -116,6 +117,7 @@ const Video = () => {
 
   const leaveCall = () => {
     setCallEnded(true);
+    socket.current = null;
     connectionRef.current.destroy();
   };
 
