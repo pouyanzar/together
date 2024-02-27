@@ -117,7 +117,6 @@ const Video = () => {
 
   const leaveCall = () => {
     setCallEnded(true);
-    socket.current = null;
     connectionRef.current.destroy();
   };
 
