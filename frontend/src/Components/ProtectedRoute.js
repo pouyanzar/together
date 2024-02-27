@@ -5,7 +5,7 @@ import { useContext } from "react";
 const ProtectedRoute = ({ children }) => {
   const { auth } = useContext(AuthContext);
   console.log(localStorage.getItem("user"));
-  if (localStorage.getItem("user") !== "undefined") {
+  if (localStorage.getItem("user") !== "undefined" || localStorage.getItem("user" !== null)) {
     console.log("if condifiton");
     return children;
   }

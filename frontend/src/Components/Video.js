@@ -115,7 +115,8 @@ const Video = () => {
     connectionRef.current = peer;
   };
 
-  const leaveCall = () => {
+  const leaveCall = (e) => {
+    e.preventDefault();
     setCallEnded(true);
     connectionRef.current.destroy();
   };
@@ -183,7 +184,7 @@ const Video = () => {
                       className="endCall"
                       variant="contained"
                       color="secondary"
-                      onClick={leaveCall}
+                      onClick={(e) => leaveCall(e)}
                     >
                       End Call
                     </Button>
